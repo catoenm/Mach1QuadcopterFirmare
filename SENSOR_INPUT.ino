@@ -1,6 +1,0 @@
-void updateOrientation(){
-  
-}
-void initIMU(){
-  
-}

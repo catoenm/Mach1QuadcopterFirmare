@@ -1,6 +1,0 @@
-void updateControllerInput(){
-  
-}
-void initControllerInput(){
-  
-}
