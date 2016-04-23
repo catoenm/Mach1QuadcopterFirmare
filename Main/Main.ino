@@ -1,43 +1,60 @@
 #include "Config.h"
-#include <Servo.h>
-#include <PID_v1.h>
 
-int setPoint [3];
-int throttle;
-Servo PROP_1;
-Servo PROP_2;
-Servo PROP_3;
-Servo PROP_4;
+RH_RF69 rf69 (4);
 
+ServoTimer2 motors[4];
+
+long ledTimeStamp = 0;
+long spinTimeStamp = 0; 
+
+const int maxThrottle = 30;
+const double spinTime = 15000;
+const bool sweep = true;
+
+enum MotorState {
+  startSpinning,
+  spinning,
+  idle
+};
+
+enum ArmLEDState {
+  on,
+  off
+};
+
+ArmLEDState armLEDState;
+MotorState motorState;
 
 void setup() {
-  // put your setup code here, to run once:
-  setPoint [0] = 0; //X
-  setPoint [1] = 0; //Y
-  setPoint [2] = 0; //Z
+  analogReference(EXTERNAL);
   
-  throttle = 0;
+  pinMode(BUTTON, INPUT);
   
-  PROP_1.attach(ESC1);
-  PROP_2.attach(ESC2);
-  PROP_3.attach(ESC3);
-  PROP_4.attach(ESC4);
-  
-  initControllerInput();
+  initComm();
   initIMU();
   initLED();
   initPID();
+  initMotors();
+
+  motorState = idle;
+  armLEDState = off;
   
+  setThrottleAll(100);
+  delay(3000);
+  setThrottleAll(-1);
+
 }
 
 void loop() {
-  
+
+  updateLED();
+
   updateOrientation();
   
-  updateControllerInput();
+  updateComm();
   
   updatePID();
-  
-  updateLED();
+
+  updateMotors();
   
 }

@@ -1,4 +1,7 @@
-
+#include <SPI.h>
+#include <RH_RF69.h>
+#include <ServoTimer2.h>
+#include <PID_v1.h>
 
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
@@ -45,5 +48,10 @@
 #define SPI_MISO 12
 #define SPI_CLK 13
 
+//Other
 
+#define VBAT_CONVERT 0.01270772239
+#define FULL_THROTTLE 1860
+#define ZERO_THROTTLE 1060
+#define THROTTLE_RANGE 800
 
