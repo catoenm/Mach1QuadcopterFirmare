@@ -1,31 +1,10 @@
 #include "Config.h"
 
-RH_RF69 rf69 (4);
-
-ServoTimer2 motors[4];
-
-long ledTimeStamp = 0;
-long spinTimeStamp = 0; 
-
-const int maxThrottle = 30;
-const double spinTime = 15000;
-const bool sweep = true;
-
-enum MotorState {
-  startSpinning,
-  spinning,
-  idle
-};
-
-enum ArmLEDState {
-  on,
-  off
-};
-
-ArmLEDState armLEDState;
-MotorState motorState;
+//Cyclone Robotics Main Flight File
 
 void setup() {
+  Serial.begin(9600);
+  
   analogReference(EXTERNAL);
   
   pinMode(BUTTON, INPUT);
@@ -35,8 +14,7 @@ void setup() {
   initLED();
   initPID();
   initMotors();
-
-  motorState = idle;
+  
   armLEDState = off;
   
   setThrottleAll(100);
@@ -47,14 +25,24 @@ void setup() {
 
 void loop() {
 
-  updateLED();
-
-  updateOrientation();
-  
+  //Process User Commands
   updateComm();
-  
+
+  //Process R/P/Y
+  updateOrientation();
+
+  //Compute PID Outputs
   updatePID();
 
+  //Set Motor Throttles
   updateMotors();
+
+  //Run LED S/M
+  updateLED();
+
+  motor0Out;
+  motor1Out;
+  motor2Out;
+  motor3Out;
   
 }

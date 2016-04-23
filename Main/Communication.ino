@@ -1,3 +1,6 @@
+
+//Cyclone Robotics Communication File
+
 void updateComm(){
   if (rf69.available())
   {
@@ -6,12 +9,14 @@ void updateComm(){
     if (rf69.recv(buf, &len))
     {
       Serial.print("got request: ");
-      Serial.println((char*)buf);
+      Serial.println(buf[0]);
       
       uint8_t data[] = "And hello back to you";
       rf69.send(data, sizeof(data));
       rf69.waitPacketSent();
       Serial.println("Sent a reply");
+
+      userMessage = buf [0];
     }
     else
     {
@@ -21,7 +26,10 @@ void updateComm(){
 }
 
 void initComm(){
-     if (!rf69.init())
+  
+  userMessage = 0;
+  
+  if (!rf69.init())
     Serial.println("init failed");
   if (!rf69.setFrequency(433.0))
     Serial.println("setFrequency failed");

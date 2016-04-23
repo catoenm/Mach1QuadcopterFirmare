@@ -2,6 +2,7 @@
 #include <RH_RF69.h>
 #include <ServoTimer2.h>
 #include <PID_v1.h>
+#include <Wire.h>
 
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
@@ -54,4 +55,63 @@
 #define FULL_THROTTLE 1860
 #define ZERO_THROTTLE 1060
 #define THROTTLE_RANGE 800
+
+//Comm
+RH_RF69 rf69 (4);
+uint8_t userMessage;
+
+//Motor function
+ServoTimer2 motors[4];
+
+const int maxThrottle = 30;
+const double spinTime = 15000;
+const bool sweep = true;
+
+double motor0Out = 0;
+double motor1Out = 0;
+double motor2Out = 0;
+double motor3Out = 0;
+
+double throttle;
+
+//Led
+long ledTimeStamp = 0;
+long spinTimeStamp = 0; 
+
+//Pid
+float Roll_P;
+float Roll_I;
+float Roll_D;
+
+
+float Pitch_P;
+float Pitch_I;
+float Pitch_D;
+
+float Yaw_P;
+float Yaw_I;
+float Yaw_D;
+
+//Inputs
+double Imu_Roll;
+double Imu_Pitch;
+double Imu_Yaw;
+
+//State Machines
+enum MotorState {
+  startSpinning,
+  spinning,
+  idle
+};
+
+enum ArmLEDState {
+  on,
+  off
+};
+
+ArmLEDState armLEDState;
+MotorState motorState;
+
+
+
 
