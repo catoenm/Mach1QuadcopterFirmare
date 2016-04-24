@@ -3,6 +3,7 @@
 #include <ServoTimer2.h>
 #include <PID_v1.h>
 #include <Wire.h>
+#include "IMU.h"
 
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
@@ -95,6 +96,8 @@ float Yaw_I;
 float Yaw_D;
 
 //Inputs
+IMU imu;
+
 double Imu_Roll;
 double Imu_Pitch;
 double Imu_Yaw;
