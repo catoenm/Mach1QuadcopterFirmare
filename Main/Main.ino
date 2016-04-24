@@ -16,6 +16,7 @@ void setup() {
   initMotors();
   
   armLEDState = off;
+  motorState = idle;
   
   setThrottleAll(100);
   delay(3000);
@@ -39,10 +40,5 @@ void loop() {
 
   //Run LED S/M
   updateLED();
-
-  motor0Out;
-  motor1Out;
-  motor2Out;
-  motor3Out;
   
 }

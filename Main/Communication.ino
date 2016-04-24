@@ -8,15 +8,20 @@ void updateComm(){
     uint8_t len = sizeof(buf);
     if (rf69.recv(buf, &len))
     {
-      Serial.print("got request: ");
-      Serial.println(buf[0]);
-      
+       
       uint8_t data[] = "And hello back to you";
       rf69.send(data, sizeof(data));
       rf69.waitPacketSent();
       Serial.println("Sent a reply");
 
-      userMessage = buf [0];
+      userMessage = buf[0]<<8|buf[1];
+
+      Serial.println(userMessage/20.48);
+      
+      motor0Out = userMessage/20.48;
+      motor1Out = userMessage/20.48;
+      motor2Out = userMessage/20.48;
+      motor3Out = userMessage/20.48;
     }
     else
     {

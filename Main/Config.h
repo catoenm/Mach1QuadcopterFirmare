@@ -58,7 +58,9 @@
 
 //Comm
 RH_RF69 rf69 (4);
-uint8_t userMessage;
+uint16_t userMessage;
+uint16_t upperThrottle;
+uint8_t lowerThrottle;
 
 //Motor function
 ServoTimer2 motors[4];
