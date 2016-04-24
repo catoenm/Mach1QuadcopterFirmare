@@ -32,8 +32,10 @@ void loop()
 {
   Serial.println("Sending to rf69_server");
   // Send a message to rf69_server
-  uint8_t data[1];
-  data [0] = (uint8_t)analogRead(POT)*255/1024;
+  uint8_t data[2];
+  int valueToSend = analogRead(POT);
+  data[0] = (uint8_t)(valueToSend>>8);
+  data[1] = (uint8_t)(valueToSend%256);
   
   rf69.send(data, sizeof(data));
   
@@ -42,7 +44,7 @@ void loop()
   uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  Serial.println(data[0]);
+  Serial.println(valueToSend);
 
   if (rf69.waitAvailableTimeout(500))
   { 
