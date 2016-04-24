@@ -8,15 +8,15 @@
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
 //PID
-#define ROLL_P 1
-#define ROLL_I 0
-#define ROLL_D 0
+#define ROLL_P 0.250
+#define ROLL_I 0.950
+#define ROLL_D 0.011
 #define ROLL_MAX 100
 #define ROLL_MIN 0
 
-#define PITCH_P 1
-#define PITCH_I 0
-#define PITCH_D 0
+#define PITCH_P 0.250
+#define PITCH_I 0.950
+#define PITCH_D 0.011
 #define PITCH_MAX 100
 #define PITCH_MIN 0
 
@@ -120,7 +120,7 @@ PID    pitchPid(&pitchInput, &pitchOutput, &pitchSetpoint, PITCH_P, PITCH_I, PIT
 double yawOutput;
 double yawInput;
 double yawSetpoint;
-PID    yawPid(&yawInput, &yawOutput, &yawSetpoint, ROLL_P, ROLL_I, ROLL_D, DIRECT);
+PID    yawPid(&yawInput, &yawOutput, &yawSetpoint, YAW_P, YAW_I, YAW_D, DIRECT);
 
 //State Machines
 enum MotorState {

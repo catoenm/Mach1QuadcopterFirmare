@@ -24,10 +24,10 @@ void updatePID(){
       motor3Out = 0;
     }
     else{
-      motor0Out = throttle + rollOutput - pitchOutput + yawOutput;
-      motor1Out = throttle - rollOutput + pitchOutput - yawOutput;
-      motor2Out = throttle - rollOutput + pitchOutput + yawOutput;
-      motor3Out = throttle + rollOutput - pitchOutput - yawOutput;
+      motor0Out = throttle - rollOutput - pitchOutput + yawOutput;
+      motor1Out = throttle + rollOutput + pitchOutput - yawOutput;
+      motor2Out = throttle + rollOutput + pitchOutput + yawOutput;
+      motor3Out = throttle - rollOutput - pitchOutput - yawOutput;
     }
   }
 }

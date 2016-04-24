@@ -10,8 +10,8 @@ IMU::IMU() {
     accelLowPassCoeff = 0.25;
     magLowPassCoeff = 0.5;
     gyroLowPassCoeff = 0.5;
-    gyroPercentRoll = .9;
-    gyroPercentPitch = .9;
+    gyroPercentRoll = .1;
+    gyroPercentPitch = .1;
     gyroPercentYaw = 1.0;
     gyroCorrectionTimeStamp = 0;
   
@@ -222,7 +222,7 @@ void IMU::readIMU() {
         gyro[i] = gyro[i] * (1.0 - gyroLowPassCoeff) + newGyro[i] * gyroLowPassCoeff;
         // Update gyro integrator
         gyroIntegrator[i] += gyro[i] * RAW_TO_RAD_PER_SEC * (currTime - prevTime) / 1000.0;
-        gyroCorrection();
+        //gyroCorrection();
     }
     
     // Set gyro range to -180 to 180 deg (same as compass output)

@@ -10,24 +10,10 @@ void updateComm(){
     {
 
       userMessage = buf[0]<<8|buf[1];
-      attitudePid = buf[2];
-      pidValue = buf[3];
-      
-      pidValues[attitudePid] = (double)(pidValue * 2.0)/200.0;
 
-      Serial.println(userMessage/10.24);
-      
-      for (int i = 0; i < 9; i++){
-        Serial.print(pidValues [i]);
-        Serial.print(", ");
-      }
-      Serial.println("");
+      //Serial.println(userMessage/10.23);
 
       throttle = userMessage/10.23;
-
-      rollPid.SetTunings(pidValues[0], pidValues[1], pidValues[2]);
-      pitchPid.SetTunings(pidValues[3], pidValues[4], pidValues[5]);
-      yawPid.SetTunings(pidValues[6], pidValues[7], pidValues[8]);
     }
     else
     {
