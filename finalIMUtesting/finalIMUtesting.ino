@@ -37,7 +37,7 @@ void loop() {
         Serial.print(F(" "));
         Serial.print(imu.getRoll());
         Serial.print(F(" "));
-        Serial.print(0);//imu.getYaw());
+        Serial.print(imu.getYaw());
         Serial.println(F(""));
         state = wait;
         break;

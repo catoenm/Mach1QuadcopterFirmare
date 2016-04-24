@@ -10,8 +10,8 @@ IMU::IMU() {
     accelLowPassCoeff = 0.25;
     magLowPassCoeff = 0.5;
     gyroLowPassCoeff = 0.5;
-    gyroPercentRoll = .9;
-    gyroPercentPitch = .9;
+    gyroPercentRoll = .7;
+    gyroPercentPitch = .7;
     gyroPercentYaw = 1.0;
     gyroCorrectionTimeStamp = 0;
   
