@@ -7,6 +7,25 @@
 
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
+//PID
+#define ROLL_P 0
+#define ROLL_I 0
+#define ROLL_D 0
+#define ROLL_MAX 100
+#define ROLL_MIN 0
+
+#define PITCH_P 0
+#define PITCH_I 0
+#define PITCH_D 0
+#define PITCH_MAX 100
+#define PITCH_MIN 0
+
+#define YAW_P 0
+#define YAW_I 0
+#define YAW_D 0
+#define YAW_MAX 100
+#define YAW_MIN 0
+
 //ESC'S
 #define ESC1 3
 #define ESC2 5
@@ -82,18 +101,20 @@ long ledTimeStamp = 0;
 long spinTimeStamp = 0; 
 
 //Pid
-float Roll_P;
-float Roll_I;
-float Roll_D;
+double rollOutput;
+double rollInput;
+double rollSetpoint;
+PID    rollPid(&rollInput, &rollOutput, &rollSetpoint, ROLL_P, ROLL_I, ROLL_D, DIRECT);
 
+double pitchOutput;
+double pitchInput;
+double pitchSetpoint;
+PID    pitchPid(&pitchInput, &pitchOutput, &pitchSetpoint, PITCH_P, PITCH_I, PITCH_D, DIRECT);
 
-float Pitch_P;
-float Pitch_I;
-float Pitch_D;
-
-float Yaw_P;
-float Yaw_I;
-float Yaw_D;
+double yawOutput;
+double yawInput;
+double yawSetpoint;
+PID    yawPid(&yawInput, &yawOutput, &yawSetpoint, ROLL_P, ROLL_I, ROLL_D, DIRECT);
 
 //Inputs
 IMU imu;
