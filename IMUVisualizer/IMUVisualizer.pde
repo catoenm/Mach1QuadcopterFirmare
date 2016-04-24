@@ -134,7 +134,7 @@ void setSerialPort(String portName) {
   }
   try {
     // Open port.
-    port = new Serial(this, portName, 115200);
+    port = new Serial(this, portName, 9600);
     port.bufferUntil('\n');
     // Persist port in configuration.
     saveStrings(serialConfigFile, new String[] { portName });
