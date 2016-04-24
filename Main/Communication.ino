@@ -8,21 +8,26 @@ void updateComm(){
     uint8_t len = sizeof(buf);
     if (rf69.recv(buf, &len))
     {
-       
-//      uint8_t data[] = "And hello back to you";
-//      rf69.send(data, sizeof(data));
-//      rf69.waitPacketSent();
-//      Serial.println("Sent a reply");
 
       userMessage = buf[0]<<8|buf[1];
+      attitudePid = buf[2];
+      pidValue = buf[3];
+      
+      pidValues[attitudePid] = (double)(pidValue * 2.0)/200.0;
 
-      Serial.println(userMessage/20.48);
+      Serial.println(userMessage/10.24);
+      
+      for (int i = 0; i < 9; i++){
+        Serial.print(pidValues [i]);
+        Serial.print(", ");
+      }
+      Serial.println("");
 
-      throttle = userMessage/20.48;
-//      motor0Out = userMessage/20.48;
-//      motor1Out = userMessage/20.48;
-//      motor2Out = userMessage/20.48;
-//      motor3Out = userMessage/20.48;
+      throttle = userMessage/10.23;
+
+      rollPid.SetTunings(pidValues[0], pidValues[1], pidValues[2]);
+      pitchPid.SetTunings(pidValues[3], pidValues[4], pidValues[5]);
+      yawPid.SetTunings(pidValues[6], pidValues[7], pidValues[8]);
     }
     else
     {
@@ -34,6 +39,7 @@ void updateComm(){
 void initComm(){
   
   userMessage = 0;
+  
   
   if (!rf69.init())
     Serial.println("init failed");

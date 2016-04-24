@@ -8,13 +8,13 @@
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
 //PID
-#define ROLL_P 0
+#define ROLL_P 1
 #define ROLL_I 0
 #define ROLL_D 0
 #define ROLL_MAX 100
 #define ROLL_MIN 0
 
-#define PITCH_P 0
+#define PITCH_P 1
 #define PITCH_I 0
 #define PITCH_D 0
 #define PITCH_MAX 100
@@ -76,11 +76,17 @@
 #define ZERO_THROTTLE 1060
 #define THROTTLE_RANGE 800
 
+//Input
+IMU imu;
+
 //Comm
 RH_RF69 rf69 (4);
 uint16_t userMessage;
 uint16_t upperThrottle;
 uint8_t lowerThrottle;
+uint8_t attitudePid;
+uint8_t pidValue;
+double pidValues [9];
 
 //Motor function
 ServoTimer2 motors[4];
@@ -115,13 +121,6 @@ double yawOutput;
 double yawInput;
 double yawSetpoint;
 PID    yawPid(&yawInput, &yawOutput, &yawSetpoint, ROLL_P, ROLL_I, ROLL_D, DIRECT);
-
-//Inputs
-IMU imu;
-
-double Imu_Roll;
-double Imu_Pitch;
-double Imu_Yaw;
 
 //State Machines
 enum MotorState {

@@ -4,9 +4,9 @@
 void updateOrientation(){
   imu.readIMU();
   
-  Imu_Roll = imu.getRoll();
-  Imu_Pitch = imu.getPitch();
-  Imu_Yaw = imu.getYaw();
+  rollInput = imu.getRoll();
+  pitchInput = imu.getPitch();
+  yawInput = imu.getYaw();
 }
 void initIMU(){
   imu.enable();
