@@ -7,13 +7,14 @@ IMU::IMU() {
     accelerometerON = false;
     gyroscopeON = false;
     altimeterON = false;
-    accelLowPassCoeff = 0.5;
+    accelLowPassCoeff = 0.25;
     magLowPassCoeff = 0.5;
     gyroLowPassCoeff = 0.5;
-    gyroPercentRoll = .5;
-    gyroPercentPitch = .5;
+    gyroPercentRoll = .9;
+    gyroPercentPitch = .9;
     gyroPercentYaw = 1.0;
-    
+    gyroCorrectionTimeStamp = 0;
+  
     for (int i = 0; i < 3; i++) {
         gyroIntegrator[i] = 0;
     }
@@ -221,13 +222,14 @@ void IMU::readIMU() {
         gyro[i] = gyro[i] * (1.0 - gyroLowPassCoeff) + newGyro[i] * gyroLowPassCoeff;
         // Update gyro integrator
         gyroIntegrator[i] += gyro[i] * RAW_TO_RAD_PER_SEC * (currTime - prevTime) / 1000.0;
+        gyroCorrection();
     }
     
     // Set gyro range to -180 to 180 deg (same as compass output)
-    if (gyroIntegrator[2] > M_PI)
-        gyroIntegrator[2] = -M_PI+0.00001; // add tolerance to avoid boucing back an forth
-    else if (gyroIntegrator[2] < -M_PI)
-        gyroIntegrator[2] = M_PI-0.00001;
+    if (gyroIntegrator[Z] > M_PI)
+        gyroIntegrator[Z] = -M_PI+0.00001; // add tolerance to avoid boucing back an forth
+    else if (gyroIntegrator[Z] < -M_PI)
+        gyroIntegrator[Z] = M_PI-0.00001;
     
     // Update time
     prevTime = currTime;
@@ -239,6 +241,26 @@ float IMU::pressure() {
 
 float IMU::temperature() {
     return double(getRawTemperature()) / 480 + 42.5; // measured in degreeC
+}
+
+void IMU::gyroCorrection() {
+  if(millis()-gyroCorrectionTimeStamp > GYRO_CORRECTION_TIME_THRESH) {
+    float accelRoll = atan2(getAccel(X), sqrt(getAccel(Y)*getAccel(Y) + getAccel(Z)*getAccel(Z)));
+    float accelPitch = atan2(getAccel(X), sqrt(getAccel(Y)*getAccel(Y) + getAccel(Z)*getAccel(Z)));
+    if (abs(accelRoll) < GYRO_CORRECTION_ANGLE_THRESH_RAD) {
+      gyroIntegrator[X] = accelRoll;
+      digitalWrite(7,1);
+    }
+    if(abs(accelPitch) < GYRO_CORRECTION_ANGLE_THRESH_RAD) {
+      gyroIntegrator[Y] = accelPitch;
+      digitalWrite(8,1);
+    }
+    gyroCorrectionTimeStamp = millis();
+  }
+  else if (millis()-gyroCorrectionTimeStamp > 300) {
+    digitalWrite(8,0);
+    digitalWrite(7,0);
+  }
 }
 
 

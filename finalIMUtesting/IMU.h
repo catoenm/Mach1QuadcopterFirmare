@@ -15,6 +15,9 @@
 #define Y 1
 #define Z 2
 
+#define GYRO_CORRECTION_ANGLE_THRESH_RAD 0.0872
+#define GYRO_CORRECTION_TIME_THRESH 2000
+
 #define GYRO_ADDRESS 0x6B
 #define GYRO_WHO_AM_I 0x0F
 #define GYRO_CTRL1 0x20
@@ -147,6 +150,7 @@ class IMU {
         float gyroPercentYaw;
     
         long int prevTime;
+        long int gyroCorrectionTimeStamp;
     
     public:
         // Setup Methods
@@ -188,6 +192,7 @@ class IMU {
         void readGyroscope();
         int getRawPressure();
         int getRawTemperature();
+        void gyroCorrection();
 };
 
 #endif
