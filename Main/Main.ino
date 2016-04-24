@@ -22,6 +22,8 @@ void setup() {
   delay(3000);
   setThrottleAll(-1);
 
+  throttle = 0;
+
 }
 
 void loop() {

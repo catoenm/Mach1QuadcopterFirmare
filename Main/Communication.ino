@@ -9,19 +9,20 @@ void updateComm(){
     if (rf69.recv(buf, &len))
     {
        
-      uint8_t data[] = "And hello back to you";
-      rf69.send(data, sizeof(data));
-      rf69.waitPacketSent();
-      Serial.println("Sent a reply");
+//      uint8_t data[] = "And hello back to you";
+//      rf69.send(data, sizeof(data));
+//      rf69.waitPacketSent();
+//      Serial.println("Sent a reply");
 
       userMessage = buf[0]<<8|buf[1];
 
       Serial.println(userMessage/20.48);
-      
-      motor0Out = userMessage/20.48;
-      motor1Out = userMessage/20.48;
-      motor2Out = userMessage/20.48;
-      motor3Out = userMessage/20.48;
+
+      throttle = userMessage/20.48;
+//      motor0Out = userMessage/20.48;
+//      motor1Out = userMessage/20.48;
+//      motor2Out = userMessage/20.48;
+//      motor3Out = userMessage/20.48;
     }
     else
     {
@@ -39,7 +40,7 @@ void initComm(){
   if (!rf69.setFrequency(433.0))
     Serial.println("setFrequency failed");
 
-  Serial.println(analogRead(A0) * 5.0/1032);
+  Serial.println("Init Completed");
 
   uint8_t key[] = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
                     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};

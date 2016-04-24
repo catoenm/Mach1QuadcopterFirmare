@@ -9,5 +9,5 @@ void updateOrientation(){
   Imu_Yaw = imu.getYaw();
 }
 void initIMU(){
-  
+  imu.enable();
 }

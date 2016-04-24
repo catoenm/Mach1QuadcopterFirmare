@@ -94,7 +94,7 @@ double motor1Out = 0;
 double motor2Out = 0;
 double motor3Out = 0;
 
-double throttle;
+double throttle = 0;
 
 //Led
 long ledTimeStamp = 0;
