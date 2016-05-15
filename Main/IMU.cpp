@@ -10,15 +10,17 @@ IMU::IMU() {
     accelLowPassCoeff = 0.25;
     magLowPassCoeff = 0.5;
     gyroLowPassCoeff = 0.5;
-    gyroPercentRoll = .1;
-    gyroPercentPitch = .1;
+    gyroPercentRoll = 1.0;
+    gyroPercentPitch = 1.0;
     gyroPercentYaw = 1.0;
     gyroCorrectionTimeStamp = 0;
   
     for (int i = 0; i < 3; i++) {
         gyroIntegrator[i] = 0;
+        gyroDrift[i] = 0;
     }
     prevTime = 0;
+
 }
 
 void IMU::writeToReg(byte deviceAddress, byte regAddress, byte value) const {
@@ -195,14 +197,7 @@ float IMU::getMag(int axis) {
 }
 
 float IMU::getGyro(int axis) {
-    return gyro[axis] * RAW_TO_DEG_PER_SEC;
-}
-
-void IMU::calibrateGyro() {
-    float temp = gyroPercentYaw;
-    gyroPercentYaw = 0.0;
-    gyroIntegrator[Z] = getYaw();
-    gyroPercentYaw = temp;
+    return (gyro[axis] - gyroDrift[axis])* RAW_TO_DEG_PER_SEC;
 }
 
 void IMU::readIMU() {
@@ -221,7 +216,7 @@ void IMU::readIMU() {
         mag[i] = mag[i] * (1.0 - magLowPassCoeff) + newMag[i] * magLowPassCoeff;
         gyro[i] = gyro[i] * (1.0 - gyroLowPassCoeff) + newGyro[i] * gyroLowPassCoeff;
         // Update gyro integrator
-        gyroIntegrator[i] += gyro[i] * RAW_TO_RAD_PER_SEC * (currTime - prevTime) / 1000.0;
+        gyroIntegrator[i] += (gyro[i] - gyroDrift[i]) * RAW_TO_RAD_PER_SEC * (currTime - prevTime) / 1000.0;
         //gyroCorrection();
     }
     
@@ -282,4 +277,41 @@ float IMU::getYaw()  {
                   + (getMag(Z) * sin(pitch) * cos(roll)))
             * (1.0 - gyroPercentYaw) + gyroIntegrator[Z] * gyroPercentYaw) * RAD_TO_DEG;
 }
+
+void IMU::calibrateGyro(){
+  int timeElap = millis();
+  int counter = 0;
+  long tempDrift[3];
+  tempDrift[0] = 0;
+  tempDrift[1] = 0;
+  tempDrift[2] = 0;
+  
+  digitalWrite(RED,1);
+  
+  while(millis() - timeElap <= 10000){
+    readGyroscope();
+    tempDrift[0] += newGyro[0];
+    tempDrift[1] += newGyro[1];
+    tempDrift[2] += newGyro[2];
+    
+    counter++;
+  }
+  
+  gyroDrift[0] = tempDrift[0]/counter;
+  gyroDrift[1] = tempDrift[1]/counter;
+  gyroDrift[2] = tempDrift[2]/counter;
+  
+  gyro[X] = newGyro[X];
+  gyro[Y] = newGyro[Y];
+  gyro[Z] = newGyro[Z];
+  
+  digitalWrite(RED, 0);
+}
+
+
+
+
+
+
+
 

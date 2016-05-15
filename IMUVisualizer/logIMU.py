@@ -17,7 +17,7 @@ def main():
         gyro = arduino.readline()
         print gyro
         outputFile.write(gyro)
-        if time.time() - timeStamp > 300:
+        if time.time() - timeStamp > 20:
             logging = False
             
     outputFile.close()

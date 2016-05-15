@@ -142,6 +142,7 @@ class IMU {
         int16_t newMag[3];
         int16_t gyro[3];
         int16_t newGyro[3];
+        int16_t gyroDrift[3];
     
         float gyroIntegrator[3]; // angle in degrees from gyro perspective
         float accelLowPassCoeff; // proportion of new value (1 = no filter)
@@ -195,6 +196,7 @@ class IMU {
         int getRawPressure();
         int getRawTemperature();
         void gyroCorrection();
+  
 };
 
 #endif
