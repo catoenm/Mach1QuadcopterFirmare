@@ -134,9 +134,18 @@ enum ArmLEDState {
   off
 };
 
+enum MotorCycle {
+  mot1,
+  mot2,
+  mot3,
+  mot4
+};
+
+MotorCycle motorCycle = mot1;
 ArmLEDState armLEDState;
 MotorState motorState;
 
+bool buttonHit = 0;
 
 
 
