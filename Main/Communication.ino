@@ -26,7 +26,7 @@ void initComm(){
   
   userMessage = 0;
   
-  
+
   if (!rf69.init())
     Serial.println("init failed");
   if (!rf69.setFrequency(433.0))

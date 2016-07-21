@@ -2,6 +2,8 @@
 
 //Cyclone Robotics Main Flight File
 
+bool toggle = 1;
+
 void setup() {
   Serial.begin(9600);
   
@@ -29,10 +31,13 @@ void setup() {
 }
 
 void loop() {
+  
+  digitalWrite(SERVO,toggle);
+  toggle = !toggle;
 
   //Process User Commands
   updateComm();
-
+  
   //Process R/P/Y
   updateOrientation();
 
