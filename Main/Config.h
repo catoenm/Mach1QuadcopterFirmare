@@ -8,15 +8,15 @@
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
 //PID
-#define ROLL_P 0.100
-#define ROLL_I 0.050
-#define ROLL_D 0.120
+#define ROLL_P 0.15
+#define ROLL_I 0
+#define ROLL_D 2
 #define ROLL_MAX 100
 #define ROLL_MIN 0
 
-#define PITCH_P 0.100
-#define PITCH_I 0.050
-#define PITCH_D 0.120
+#define PITCH_P 0.15
+#define PITCH_I 0
+#define PITCH_D 2
 #define PITCH_MAX 100
 #define PITCH_MIN 0
 
@@ -133,6 +133,15 @@ enum ArmLEDState {
   on,
   off
 };
+
+double rollIntErr = 0;
+double pitchIntErr = 0;
+double yawIntErr = 0;
+
+double rollPrevErr = 0;
+double pitchPrevErr = 0;
+double yawPrevErr = 0;
+
 
 ArmLEDState armLEDState;
 MotorState motorState;
