@@ -32,8 +32,8 @@ void setup() {
 
 void loop() {
   
-  digitalWrite(SERVO,toggle);
-  toggle = !toggle;
+  //digitalWrite(SERVO,toggle);
+  //toggle = !toggle;
 
   //Process User Commands
   updateComm();

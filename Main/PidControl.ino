@@ -21,25 +21,21 @@ void updatePID(){
     double pitchErr = pitchSetpoint + pitchInput;
     double yawErr = yawSetpoint - yawInput;
 
-    rollIntErr += rollErr;
-    pitchIntErr += pitchErr;
-    //yawIntErr += yawErr;
-    
-
-//    if (rollIntErr < -30)
-//      rollIntErr = -30;
-//    if (rollIntErr >  30)
-//      rollIntErr =  30;
-//      
-//    if (pitchIntErr < -30)
-//      pitchIntErr = -30;
-//    if (pitchIntErr >  30)
-//      pitchIntErr =  30;
+    if (rollIntErr < -30)
+      rollIntErr = -30;
+    if (rollIntErr >  30)
+      rollIntErr =  30;
       
-    rollOutput = rollErr * ROLL_P + rollIntErr * ROLL_I + (rollErr - rollPrevErr) * ROLL_D;
+    if (pitchIntErr < -30)
+      pitchIntErr = -30;
+    if (pitchIntErr >  30)
+      pitchIntErr =  30;
+
+    rollOutput = rollErr * ROLL_P + rollIntErr * ROLL_I + (rollErr - rollPrevPrevErr) * ROLL_D;
     pitchOutput = pitchErr * PITCH_P + pitchIntErr * PITCH_I + (pitchErr - pitchPrevErr) * PITCH_D;
     //yawOutput = yawErr * YAW_P + yawIntErr * YAW_I;
 
+    rollPrevPrevErr = rollPrevErr;
     rollPrevErr = rollErr;
     pitchPrevErr = pitchErr;
     //yawPrevErr = yawErr;
@@ -53,6 +49,12 @@ void updatePID(){
       motor3Out = 0;
     }
     else{
+      // Integrate Error
+      rollIntErr += rollErr;
+      pitchIntErr += pitchErr;
+      //yawIntErr += yawErr;
+
+      // Set outputs 
       motor0Out = throttle - rollOutput + pitchOutput + yawOutput;
       motor1Out = throttle + rollOutput + pitchOutput - yawOutput;
       motor2Out = throttle + rollOutput - pitchOutput + yawOutput;

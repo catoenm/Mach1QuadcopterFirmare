@@ -8,15 +8,15 @@
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
 //PID
-#define ROLL_P 0.15
-#define ROLL_I 0
-#define ROLL_D 2
+#define ROLL_P .35
+#define ROLL_I .003
+#define ROLL_D 30
 #define ROLL_MAX 100
 #define ROLL_MIN 0
 
-#define PITCH_P 0.15
+#define PITCH_P 0
 #define PITCH_I 0
-#define PITCH_D 2
+#define PITCH_D 0
 #define PITCH_MAX 100
 #define PITCH_MIN 0
 
@@ -95,6 +95,8 @@ const int maxThrottle = 30;
 const double spinTime = 15000;
 const bool sweep = true;
 
+int printOrientation = 0;
+
 double motor0Out = 0;
 double motor1Out = 0;
 double motor2Out = 0;
@@ -139,12 +141,14 @@ double pitchIntErr = 0;
 double yawIntErr = 0;
 
 double rollPrevErr = 0;
+double rollPrevPrevErr = 0;
 double pitchPrevErr = 0;
 double yawPrevErr = 0;
 
-
 ArmLEDState armLEDState;
 MotorState motorState;
+
+
 
 
 

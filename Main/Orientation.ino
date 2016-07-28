@@ -9,14 +9,17 @@ void updateOrientation(){
   yawInput = imu.getYaw();
 
   /*
-  Serial.print(F("Orientation: "));
-        Serial.print(pitchInput);
-        Serial.print(F(" "));
-        Serial.print(rollInput);
-        Serial.print(F(" "));
-        Serial.print(yawInput);
-        Serial.println(F(""));
-
+  
+  if (printOrientation++ > 50) {
+    printOrientation = 0;
+    Serial.print(F("Orientation: "));
+    Serial.print(pitchInput);
+    Serial.print(F(" "));
+    Serial.print(rollInput);
+    Serial.print(F(" "));
+    Serial.print(yawInput);
+    Serial.println(F(""));
+  }
 
   Serial.print(imu.getGyro(X));
   Serial.print(',');

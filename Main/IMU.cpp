@@ -214,9 +214,9 @@ void IMU::readIMU() {
         // Low pass filter: updatedValue = old*(1-coeff) + new*coeff
         accel[i] = accel[i] * (1.0 - accelLowPassCoeff) + newAccel[i] * accelLowPassCoeff;
         mag[i] = mag[i] * (1.0 - magLowPassCoeff) + newMag[i] * magLowPassCoeff;
-        gyro[i] = gyro[i] * (1.0 - gyroLowPassCoeff) + newGyro[i] * gyroLowPassCoeff;
+        gyro[i] = gyro[i] * (1.0 - gyroLowPassCoeff) + (newGyro[i] - gyroDrift[i]) * gyroLowPassCoeff;
         // Update gyro integrator
-        gyroIntegrator[i] += (gyro[i] - gyroDrift[i]) * RAW_TO_RAD_PER_SEC * (currTime - prevTime) / 1000.0;
+        gyroIntegrator[i] += (gyro[i]) * RAW_TO_RAD_PER_SEC * (currTime - prevTime) / 1000.0;
         //gyroCorrection();
     }
     
@@ -280,7 +280,7 @@ float IMU::getYaw()  {
 
 void IMU::calibrateGyro(){
   int timeElap = millis();
-  int counter = 0;
+  float counter = 0;
   long tempDrift[3];
   tempDrift[0] = 0;
   tempDrift[1] = 0;
@@ -301,11 +301,13 @@ void IMU::calibrateGyro(){
   gyroDrift[1] = tempDrift[1]/counter;
   gyroDrift[2] = tempDrift[2]/counter;
   
-  gyro[X] = newGyro[X];
-  gyro[Y] = newGyro[Y];
-  gyro[Z] = newGyro[Z];
+  gyro[X] = newGyro[X] - gyroDrift[0];
+  gyro[Y] = newGyro[Y] - gyroDrift[1];
+  gyro[Z] = newGyro[Z] - gyroDrift[2];
   
   digitalWrite(RED, 0);
+  
+  prevTime = millis();
 }
 
 
