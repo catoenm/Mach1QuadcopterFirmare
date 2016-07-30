@@ -8,12 +8,25 @@ void updateComm(){
     uint8_t len = sizeof(buf);
     if (rf69.recv(buf, &len))
     {
-
-      userMessage = buf[0]<<8|buf[1];
-
-      //Serial.println(userMessage/10.23);
-
-      throttle = userMessage/10.23;
+      throttleMsg = (buf[0]<<8|buf[1]);
+      rollMsg = (buf[2]<<8|buf[3]);
+      pitchMsg = (buf[4]<<8|buf[5]);
+      yawMsg = (buf[6]<<8|buf[7]);
+      
+      throttle = throttleMsg/10.23; // Map to 0 - 100%
+      yawSetpoint = ((int)yawMsg-512)/2.84; // Map to +/- 180deg
+      
+      // Print values read
+      /*
+      Serial.print("T: ");
+      Serial.print(throttle);
+      Serial.print(" R: ");
+      Serial.print(rollSetpoint);
+      Serial.print(" P: ");
+      Serial.print(pitchSetpoint);
+      Serial.print(" Y: ");
+      Serial.println(yawSetpoint);
+      */
     }
     else
     {
@@ -24,8 +37,10 @@ void updateComm(){
 
 void initComm(){
   
-  userMessage = 0;
-  
+  throttleMsg = 0;
+  rollMsg = 0;
+  pitchMsg = 0;
+  yawMsg = 0;
 
   if (!rf69.init())
     Serial.println("init failed");

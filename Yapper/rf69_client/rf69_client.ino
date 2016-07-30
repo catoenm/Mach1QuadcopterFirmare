@@ -1,7 +1,17 @@
 #include <SPI.h>
 #include <RH_RF69.h>
 
-#define POT A1
+#define VOLTAGE_MONITOR A0
+#define THROTTLE A1
+#define BUTTON A3
+#define ROLL A4
+#define PITCH A5
+#define YAW A2
+
+int prevThrottle = 0;
+int prevRoll = 0;
+int prevPitch = 0;
+int prevYaw = 0;
 
 // Singleton instance of the radio driver
 RH_RF69 rf69(4);
@@ -9,6 +19,7 @@ RH_RF69 rf69(4);
 
 void setup() 
 {
+  pinMode(BUTTON, INPUT);
   Serial.begin(9600);
   if (!rf69.init())
     Serial.println("init failed");
@@ -30,39 +41,71 @@ void setup()
 
 void loop()
 {
-  Serial.println("Sending to rf69_server");
-  // Send a message to rf69_server
-  uint8_t data[2];
-  int valueToSend = analogRead(POT);
-  data[0] = (uint8_t)(valueToSend>>8);
-  data[1] = (uint8_t)(valueToSend%256);
+  uint8_t data[8];
+  bool sendData = true;
+  int throttleValue = analogRead(THROTTLE);
+  int rollValue = analogRead(ROLL);
+  int pitchValue = analogRead(PITCH);
+  int yawValue = analogRead(YAW);
+  int buttonValue = digitalRead(BUTTON);
   
-  rf69.send(data, sizeof(data));
-  
-  rf69.waitPacketSent();
-  // Now wait for a reply
-  uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
-  uint8_t len = sizeof(buf);
+  // If values have changed, send new values
+  if (abs(throttleValue - prevThrottle) > 1 || abs(rollValue - prevRoll) >1
+        || abs(pitchValue - prevPitch) > 1 || abs(yawValue - prevYaw) > 1 ) {
+    
+    Serial.println("Sending message to Quad:");
+    Serial.print("T: ");
+    Serial.print(throttleValue);
+    Serial.print(" R: ");
+    Serial.print(rollValue);
+    Serial.print(" P: ");
+    Serial.print(pitchValue);
+    Serial.print(" Y: ");
+    Serial.print(yawValue);
+    Serial.print(" B: ");
+    Serial.println(buttonValue);
+    
+    Serial.print("PID Value: ");
+    Serial.print((double)yawValue/1.0);
+    
+    data[0] = (uint8_t)(throttleValue>>8);
+    data[1] = (uint8_t)(throttleValue%(1<<8));
+    data[2] = (uint8_t)(rollValue>>8);
+    data[3] = (uint8_t)(rollValue%(1<<8));
+    data[4] = (uint8_t)(pitchValue>>8);
+    data[5] = (uint8_t)(pitchValue%(1<<8));
+    data[6] = (uint8_t)(yawValue>>8);
+    data[7] = (uint8_t)(yawValue%(1<<8));
+    
+    rf69.send(data, sizeof(data));
+    
+    rf69.waitPacketSent();
+    // Now wait for a reply
+    uint8_t buf[RH_RF69_MAX_MESSAGE_LEN];
+    uint8_t len = sizeof(buf);
 
-  Serial.println(valueToSend);
-
-  if (rf69.waitAvailableTimeout(500))
-  { 
-    // Should be a reply message for us now   
-    if (rf69.recv(buf, &len))
-    {
-      Serial.print("got reply: ");
-      Serial.println((char*)buf);
+    if (rf69.waitAvailableTimeout(250))
+    { 
+      // Should be a reply message for us now   
+      if (rf69.recv(buf, &len))
+      {
+        Serial.print("got reply: ");
+        Serial.println((char*)buf);
+      }
+      else
+      {
+        Serial.println("recv failed");
+      }
     }
     else
     {
-      Serial.println("recv failed");
+      //Serial.println("No reply, is rf69_server running?");
     }
+    
+    prevThrottle = throttleValue;
+    prevRoll = rollValue;
+    prevPitch = pitchValue;
+    prevYaw = yawValue;
   }
-  else
-  {
-    Serial.println("No reply, is rf69_server running?");
-  }
-  delay(50);
 }
 

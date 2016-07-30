@@ -8,15 +8,15 @@
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
 //PID
-#define ROLL_P .35
-#define ROLL_I .003
-#define ROLL_D 30
+#define ROLL_P .6
+#define ROLL_I 0.0005
+#define ROLL_D -.25
 #define ROLL_MAX 100
 #define ROLL_MIN 0
 
-#define PITCH_P 0
-#define PITCH_I 0
-#define PITCH_D 0
+#define PITCH_P .6
+#define PITCH_I 0.0005
+#define PITCH_D -.25
 #define PITCH_MAX 100
 #define PITCH_MIN 0
 
@@ -81,12 +81,18 @@ IMU imu;
 
 //Comm
 RH_RF69 rf69 (4);
-uint16_t userMessage;
+uint16_t throttleMsg;
+uint16_t rollMsg;
+uint16_t pitchMsg;
+uint16_t yawMsg;
 uint16_t upperThrottle;
 uint8_t lowerThrottle;
 uint8_t attitudePid;
 uint8_t pidValue;
+
 double pidValues [9];
+
+double tempPIDConst = 0;
 
 //Motor function
 ServoTimer2 motors[4];
@@ -111,18 +117,24 @@ long spinTimeStamp = 0;
 //Pid
 double rollOutput;
 double rollInput;
+double dRollInput;
 double rollSetpoint;
 PID    rollPid(&rollInput, &rollOutput, &rollSetpoint, ROLL_P, ROLL_I, ROLL_D, DIRECT);
 
 double pitchOutput;
 double pitchInput;
+double dPitchInput;
 double pitchSetpoint;
 PID    pitchPid(&pitchInput, &pitchOutput, &pitchSetpoint, PITCH_P, PITCH_I, PITCH_D, DIRECT);
 
 double yawOutput;
 double yawInput;
+double dYawInput;
 double yawSetpoint;
 PID    yawPid(&yawInput, &yawOutput, &yawSetpoint, YAW_P, YAW_I, YAW_D, DIRECT);
+
+int deltaT;
+long prevTime;
 
 //State Machines
 enum MotorState {
@@ -141,7 +153,6 @@ double pitchIntErr = 0;
 double yawIntErr = 0;
 
 double rollPrevErr = 0;
-double rollPrevPrevErr = 0;
 double pitchPrevErr = 0;
 double yawPrevErr = 0;
 

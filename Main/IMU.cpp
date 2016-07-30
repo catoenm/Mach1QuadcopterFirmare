@@ -9,7 +9,7 @@ IMU::IMU() {
     altimeterON = false;
     accelLowPassCoeff = 0.25;
     magLowPassCoeff = 0.5;
-    gyroLowPassCoeff = 0.5;
+    gyroLowPassCoeff = 0.95;
     gyroPercentRoll = 1.0;
     gyroPercentPitch = 1.0;
     gyroPercentYaw = 1.0;
@@ -258,7 +258,6 @@ void IMU::gyroCorrection() {
   }
 }
 
-
 float IMU::getRoll() {
     return RAD_TO_DEG * (atan2((-1.0)*getAccel(Y), getAccel(Z)) * (1-gyroPercentRoll) + gyroIntegrator[X] * gyroPercentRoll);
 }
@@ -282,20 +281,29 @@ void IMU::calibrateGyro(){
   int timeElap = millis();
   float counter = 0;
   long tempDrift[3];
+  long tempRoll = 0;
+  long tempPitch = 0;
   tempDrift[0] = 0;
   tempDrift[1] = 0;
   tempDrift[2] = 0;
   
   digitalWrite(RED,1);
   
+  gyroPercentRoll = 0;
+  gyroPercentPitch = 0;
+  
   while(millis() - timeElap <= 10000){
-    readGyroscope();
+    readIMU();
     tempDrift[0] += newGyro[0];
     tempDrift[1] += newGyro[1];
     tempDrift[2] += newGyro[2];
-    
+    tempPitch += getPitch();
+    tempRoll += getRoll();
     counter++;
   }
+  
+  gyroPercentRoll = 1.0;
+  gyroPercentPitch = 1.0;
   
   gyroDrift[0] = tempDrift[0]/counter;
   gyroDrift[1] = tempDrift[1]/counter;
@@ -305,6 +313,9 @@ void IMU::calibrateGyro(){
   gyro[Y] = newGyro[Y] - gyroDrift[1];
   gyro[Z] = newGyro[Z] - gyroDrift[2];
   
+  gyroIntegrator[0] = (tempRoll/counter)/RAD_TO_DEG;
+  gyroIntegrator[1] = (tempPitch/counter)/RAD_TO_DEG;
+    
   digitalWrite(RED, 0);
   
   prevTime = millis();

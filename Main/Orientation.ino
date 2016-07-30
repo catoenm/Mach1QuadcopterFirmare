@@ -8,8 +8,12 @@ void updateOrientation(){
   pitchInput = imu.getPitch();
   yawInput = imu.getYaw();
 
-  /*
-  
+  dRollInput = imu.getGyro(X);
+  dPitchInput = imu.getGyro(Y);
+  dYawInput = imu.getGyro(Z);
+
+/*
+
   if (printOrientation++ > 50) {
     printOrientation = 0;
     Serial.print(F("Orientation: "));
