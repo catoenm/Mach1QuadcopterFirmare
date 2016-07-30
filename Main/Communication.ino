@@ -14,7 +14,10 @@ void updateComm(){
       yawMsg = (buf[6]<<8|buf[7]);
       
       throttle = throttleMsg/10.23; // Map to 0 - 100%
+      rollSetpoint = ((int)rollMsg-512)/68.34; // Map to +/- 7.5deg
+      pitchSetpoint = ((int)pitchMsg-512)/68.34; // Map to +/- 7.5deg
       yawSetpoint = ((int)yawMsg-512)/2.84; // Map to +/- 180deg
+      tempPIDConst = yawMsg/(255750.0);
       
       // Print values read
       /*
