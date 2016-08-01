@@ -55,13 +55,13 @@ void loop()
     
     Serial.println("Sending message to Quad:");
     Serial.print("T: ");
-    Serial.print(throttleValue);
+    Serial.print(throttleValue/10.23);
     Serial.print(" R: ");
-    Serial.print(rollValue);
+    Serial.print(((int)rollValue-512)/68.34);
     Serial.print(" P: ");
-    Serial.print(pitchValue);
+    Serial.print(((int)pitchValue-512)/68.34);
     Serial.print(" Y: ");
-    Serial.print(yawValue);
+    Serial.print(((int)yawValue-512)/2.84);
     Serial.print(" B: ");
     Serial.println(buttonValue);
     
