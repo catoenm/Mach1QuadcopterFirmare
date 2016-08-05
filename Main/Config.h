@@ -8,15 +8,15 @@
 //Cyclone Robotics Mach 1 Flight Controller Configuration File
 
 //PID
-#define ROLL_P .6
+#define ROLL_P 0.6
 #define ROLL_I 0.0005
-#define ROLL_D -.25
+#define ROLL_D 0.1
 #define ROLL_MAX 100
 #define ROLL_MIN 0
 
-#define PITCH_P .6
+#define PITCH_P 0.6
 #define PITCH_I 0.0005
-#define PITCH_D -.25
+#define PITCH_D 0.1
 #define PITCH_MAX 100
 #define PITCH_MIN 0
 

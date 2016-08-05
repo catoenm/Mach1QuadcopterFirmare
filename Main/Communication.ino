@@ -17,7 +17,7 @@ void updateComm(){
       rollSetpoint = ((int)rollMsg-512)/68.34; // Map to +/- 7.5deg
       pitchSetpoint = ((int)pitchMsg-512)/68.34; // Map to +/- 7.5deg
       yawSetpoint = ((int)yawMsg-512)/2.84; // Map to +/- 180deg
-      tempPIDConst = yawMsg/(255750.0);
+      tempPIDConst = yawMsg*(0.0001);
       
       // Print values read
       /*

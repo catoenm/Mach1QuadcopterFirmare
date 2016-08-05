@@ -38,8 +38,8 @@ void updatePID(){
 //    if (pitchIntErr > 10/PITCH_I)
 //      pitchIntErr =  10/PITCH_I;
 
-    rollOutput = rollErr * ROLL_P + rollIntErr * ROLL_I + dRollInput * ROLL_D;
-    pitchOutput = pitchErr * PITCH_P + pitchIntErr * PITCH_I + dPitchInput * PITCH_D;
+    rollOutput = rollErr * ROLL_P + rollIntErr * ROLL_I - dRollInput * ROLL_D;
+    pitchOutput = pitchErr * PITCH_P + pitchIntErr * PITCH_I - dPitchInput * PITCH_D;
     //yawOutput = yawErr * YAW_P + yawIntErr * YAW_I;
 
     // Print PID Values
