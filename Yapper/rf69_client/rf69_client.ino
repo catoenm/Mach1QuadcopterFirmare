@@ -50,8 +50,8 @@ void loop()
   int buttonValue = digitalRead(BUTTON);
   
   // If values have changed, send new values
-  if (abs(throttleValue - prevThrottle) > 1 || abs(rollValue - prevRoll) >1
-        || abs(pitchValue - prevPitch) > 1 || abs(yawValue - prevYaw) > 1 ) {
+  if (abs(throttleValue - prevThrottle) > 3 || abs(rollValue - prevRoll) > 3
+        || abs(pitchValue - prevPitch) > 3 || abs(yawValue - prevYaw) > 3 ) {
     
     Serial.println("Sending message to Quad:");
     Serial.print("T: ");
