@@ -68,8 +68,8 @@ prevTimePID = 0;
 % Rotations: attitude   = (roll,  pitch,  yaw )
 %            dattitude  = (droll, dpitch, dyaw)
 %            ddattitude = (ddroll, ddpitch, ddyaw)
-quadState.attitude = [5,0,0];
-quadState.dattitude = [90,0,0];
+quadState.attitude = [5,5,0];
+quadState.dattitude = [90,90,10];
 quadState.ddattitude = [NaN,NaN,NaN];
 
 % Translation: position   = (x,  y,  z )
@@ -144,9 +144,9 @@ quadState.motorOut = [0;0;0;0];
 % ----------------------------- PID Values ----------------------------- %
 
 % PID constants
-pid.p = [0.6,0.6,0];
-pid.i = [0.0005,0.0005,0];
-pid.d = [0.1,0.1,0];
+pid.p = [0.6,0.6,10];
+pid.i = [0.0005,0.0005,0.0005];
+pid.d = [0.1,0.1,0.5];
 
 % ---------------------------- Simulation ------------------------------ %
 
@@ -158,7 +158,8 @@ while time < SIMULATION_TIME
 
     [quadState] = computeMotorOutputs(quadState,quadSetpoints,pid,deltaTPID);
     propSpeed = polyval(THROTTLE_TO_RPM, quadState.motorOut);
-    propForce = polyval(RPM_TO_THRUST, propSpeed);
+    propThrust = polyval(RPM_TO_THRUST, propSpeed);
+    propTorque = polyval(RPM_TO_TORQUE, propSpeed) .* [-1;1;-1;1];
 
     % Solve for accelerations 
     % ddattitude: (roll, pitch, yaw)
@@ -166,9 +167,9 @@ while time < SIMULATION_TIME
     %   angularAccel = sumForFourPropellers(force*distance) / MOI 
     % For Yaw: 
     %   tbd
-    quadState.ddattitude =  [ ( dot(propForce,PROP_RELATIVE_POS(:,2)) / IXX ) * RAD_TO_DEG , ...
-                              ( dot(propForce,PROP_RELATIVE_POS(:,1)) / IYY ) * RAD_TO_DEG ,...
-                              0 ]; 
+    quadState.ddattitude =  [ ( dot(propThrust,PROP_RELATIVE_POS(:,2)) / IXX ) * RAD_TO_DEG , ...
+                              ( dot(propThrust,PROP_RELATIVE_POS(:,1)) / IYY ) * RAD_TO_DEG ,...
+                              sum(propTorque) / IZZ * RAD_TO_DEG ]; 
     
     if ADD_NOISE
         quadState.ddattitude = quadState.ddattitude + [ noise(time,1), ...

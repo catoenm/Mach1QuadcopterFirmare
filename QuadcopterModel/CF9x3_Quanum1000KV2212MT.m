@@ -21,7 +21,7 @@ function CF9x3_Quanum1000KV2212MT()
     PROP_MASS = 0.001;
     
     % Torque - rpm curve coefficients;
-    RPM_TO_DRAG = [0, 0, 0, 1];
+    RPM_TO_TORQUE = [3.76866995065736e-09,-5.94955569962960e-06,0.00729215772784099];
     
     % Thrust - rpm curve coefficients; 
     RPM_TO_THRUST = [2.45463013670666e-08,0.000316302688232674,-0.451441446845131];
